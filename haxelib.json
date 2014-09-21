@@ -1,6 +1,6 @@
 {
   "name": "simpleMonad",
-  "url": "",
+  "url": "https://github.com/NobukazuHanada/simpleMonad",
   "classPath" : "src",
   "license": "MIT",
   "tags": ["cross","utility"],
