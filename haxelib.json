@@ -1,0 +1,12 @@
+{
+  "name": "simpleMonad",
+  "url": "",
+  "classPath" : "src",
+  "license": "MIT",
+  "tags": ["cross","utility"],
+  "description": "simple monad libraries",
+  "version": "0.0.1",
+  "releasenote": "",
+  "contributors": ["nobkz"],
+  "dependencies": {}
+}
