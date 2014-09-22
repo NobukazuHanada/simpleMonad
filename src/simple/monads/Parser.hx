@@ -45,7 +45,7 @@ class Parser{
 
     public static function many1<S,E,T>(parser : ParserDef<S,E,T>)
         : ParserDef<S,E,Array<T>>
-          return Monad.do_m({
+          return Monad.do_m(Parser,{
                   v < parser;
                   vs < many(parser);
                   mPack([v].concat(vs));

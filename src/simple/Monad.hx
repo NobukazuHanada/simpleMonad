@@ -10,10 +10,9 @@ using haxe.macro.Tools;
 
 
 class Monad{
-	macro public static function do_m(e){
+	macro public static function do_m(type, e){
 		return switch (e.expr) {
 			case EBlock(exprArray):
-			var type = checkType(exprArray);
 			{expr : EBlock([(macro function mPack<T>( x : T ) return $type.mPack(x)),
 							 do_arrayExpr(type, exprArray)]),
 			pos : e.pos};
@@ -21,42 +20,6 @@ class Monad{
 			Context.error("not block", Context.currentPos());
 		}
 	}
-
-	#if macro
-	private static function checkType(exprs : Array<Expr>){
-		function getMonadClassFromType(type : Type){
-			return if( TypeTools.unify(type, Context.getType("simple.monads.Option.OptionDef")) ) macro Option
-			else if( TypeTools.unify(type, Context.getType("simple.monads.Parser.ParserDef")) ) macro Parser
-			else if( TypeTools.unify(type, Context.getType("simple.monads.Result.ResultDef")) ) macro Result
-			else if( TypeTools.unify(type, Context.getType("simple.monads.State.StateDef")) ) macro State
-			else if( TypeTools.unify(type, Context.getType("simple.monads.Continuation.Cont")) ) macro Continuation
-			else if( TypeTools.unify(type, Context.getType("simple.monads.Callback.Handler")) ) macro Handler
-			else throw "";
-		}
-
-
-		var typeName = exprs.map(function(e)
-			try{
-				return switch (e.expr) {
-					case EBinop(OpLt, _, e2):
-						getMonadClassFromType(Context.typeof(e2));
-					case EVars(_):
-						null;
-					case _:
-						getMonadClassFromType(Context.typeof(e));
-				}
-			}
-			catch(d:Dynamic){
-				return null;
-			})
-		.fold(function(type,accType)
-			return if(type == null) accType
-			else type
-		,null);
-
-		return typeName;
-	}
-	#end
 
 	#if macro
 	private static function do_arrayExpr(type, exprArray : Array<Expr>){

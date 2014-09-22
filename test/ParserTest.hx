@@ -18,7 +18,7 @@ class ParserTest extends BuddySuite implements Buddy {
                     return if( input.length == 0 ) Error("don't get item!!!") 
                     else Success(ParseItem(input.charAt(0),input.substring(1)));
 
-                var newParser = Monad.do_m({
+                var newParser = Monad.do_m(Parser,{
                     x < item;
                     y < item;
                     mPack(x + y);

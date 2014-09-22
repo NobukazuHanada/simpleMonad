@@ -13,7 +13,7 @@ class OptionTest extends BuddySuite implements Buddy {
     public function new() {
         describe("Monad Computation of Option type", {
             it("Returning Some Value of Option type",{
-                Monad.do_m({
+                Monad.do_m(Option,{
                     x < Some(1);
                     y < Some("aa");
                     mPack(x.string()+y);
@@ -23,7 +23,7 @@ class OptionTest extends BuddySuite implements Buddy {
             });
 
             it("Returning None of Option type",{
-                Monad.do_m({
+                Monad.do_m(Option,{
                     x < Some(1);
                     None;
                     mPack(x);
