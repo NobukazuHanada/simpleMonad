@@ -5,7 +5,7 @@
   "license": "MIT",
   "tags": ["cross","utility"],
   "description": "simple monad libraries",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "releasenote": "",
   "contributors": ["nobkz"],
   "dependencies": {}
