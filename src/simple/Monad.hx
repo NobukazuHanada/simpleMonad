@@ -2,17 +2,18 @@ package simple;
 import haxe.macro.Expr;
 import haxe.macro.Context;
 import haxe.macro.ComplexTypeTools;
+import haxe.macro.TypeTools;
 import haxe.macro.Type;
 
 using Lambda;
-using haxe.macro.TypeTools;
+using haxe.macro.Tools;
 
 
 class Monad{
 	macro public static function do_m(e){
 		return switch (e.expr) {
 			case EBlock(exprArray):
-			var type = macro $i{checkType(exprArray)};
+			var type = checkType(exprArray);
 			{expr : EBlock([(macro function mPack<T>( x : T ) return $type.mPack(x)),
 							 do_arrayExpr(type, exprArray)]),
 			pos : e.pos};
@@ -22,13 +23,15 @@ class Monad{
 	}
 
 	#if macro
-	private static function checkType(exprs : Array<Expr>) : String{
-		function typeToString(type:Type) : String{
-			return switch(type){
-				case TEnum(t,_): t.toString();
-				case TType(t,_): t.toString();
-				case _ : type.toString();
-			}
+	private static function checkType(exprs : Array<Expr>){
+		function getMonadClassFromType(type : Type){
+			return if( TypeTools.unify(type, Context.getType("simple.monads.Option.OptionDef")) ) macro Option
+			else if( TypeTools.unify(type, Context.getType("simple.monads.Parser.ParserDef")) ) macro Parser
+			else if( TypeTools.unify(type, Context.getType("simple.monads.Result.ResultDef")) ) macro Result
+			else if( TypeTools.unify(type, Context.getType("simple.monads.State.StateDef")) ) macro State
+			else if( TypeTools.unify(type, Context.getType("simple.monads.Continuation.Cont")) ) macro Continuation
+			else if( TypeTools.unify(type, Context.getType("simple.monads.Callback.Handler")) ) macro Handler
+			else throw "";
 		}
 
 
@@ -36,19 +39,19 @@ class Monad{
 			try{
 				return switch (e.expr) {
 					case EBinop(OpLt, _, e2):
-						typeToString(Context.typeof(e2));
+						getMonadClassFromType(Context.typeof(e2));
 					case EVars(_):
 						null;
 					case _:
-						typeToString(Context.typeof(e));
+						getMonadClassFromType(Context.typeof(e));
 				}
 			}
-			catch(_:Dynamic){
+			catch(d:Dynamic){
 				return null;
 			})
 		.fold(function(type,accType)
 			return if(type == null) accType
-			else { var typeDefName = type.split(".").pop(); typeDefName.substr(0, typeDefName.length - 3); }
+			else type
 		,null);
 
 		return typeName;

@@ -9,7 +9,10 @@ enum ParseItem<S,T>{
 typedef ParseResult<S,E,T> = ResultDef<ParseItem<S,T>,E>;
 typedef ParserDef<S,E,T> = S -> ParseResult<S,E,T>;
 
+
+
 class Parser{
+
 	public static function mPack<S,E,T>(tree : T) : ParserDef<S,E,T>
 		return function(input : S) return Success(ParseItem(tree, input));
 

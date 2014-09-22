@@ -5,7 +5,8 @@ using buddy.Should;
 using Std;
 
 import simple.Monad;
-import simple.monads.Option;
+using simple.monads.Option;
+
 
 
 class OptionTest extends BuddySuite implements Buddy {
@@ -15,7 +16,7 @@ class OptionTest extends BuddySuite implements Buddy {
                 Monad.do_m({
                     x < Some(1);
                     y < Some("aa");
-                    mPack(x+y.string());
+                    mPack(x.string()+y);
                 }).string().should.be(
                     Some("1aa").string()
                 );
